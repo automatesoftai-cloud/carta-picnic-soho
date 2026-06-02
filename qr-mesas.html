@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Mesas — The PicNic</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── CONFIG: Cambia estas URLs cuando tengas el dominio final ── */
+    :root {
+      --url-menu:   "https://picnic-soho-carta.vercel.app";
+      --url-reseña: "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4";
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #faf6ef;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      gap: 3rem;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #1a1714;
+      text-align: center;
+    }
+
+    .qr-grid {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .qr-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      border-top: 5px solid #c8962a;
+    }
+
+    .qr-card.resena { border-top-color: #4285f4; }
+
+    .qr-icon { font-size: 2.5rem; }
+
+    .qr-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #1a1714;
+    }
+
+    .qr-card p {
+      font-size: .82rem;
+      color: #5a4e46;
+      line-height: 1.5;
+    }
+
+    canvas {
+      border-radius: 12px;
+      border: 6px solid #f0e9dc;
+    }
+
+    .qr-url {
+      font-size: .7rem;
+      color: #c8962a;
+      word-break: break-all;
+    }
+
+    .print-btn {
+      background: #1a1714;
+      color: white;
+      border: none;
+      padding: .8rem 2rem;
+      border-radius: 30px;
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: .05em;
+      margin-top: 1rem;
+      transition: background .2s;
+    }
+
+    .print-btn:hover { background: #c8962a; }
+
+    .note {
+      font-size: .75rem;
+      color: #9b8a7a;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.6;
+      padding: 1rem;
+      background: #f0e9dc;
+      border-radius: 10px;
+    }
+
+    @media print {
+      body { background: white; padding: 1rem; }
+      .print-btn, .note { display: none; }
+      .qr-grid { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>The PicNic — QR Mesas</h1>
+
+  <div class="qr-grid">
+
+    <div class="qr-card">
+      <div class="qr-icon">🍽️</div>
+      <h2>Ver la Carta</h2>
+      <p>Escanea para ver nuestra carta completa con todos los platos y precios</p>
+      <canvas id="qr-menu"></canvas>
+      <p class="qr-url" id="url-menu"></p>
+    </div>
+
+    <div class="qr-card resena">
+      <div class="qr-icon">⭐</div>
+      <h2>Deja tu Reseña</h2>
+      <p>¿Te ha gustado? Tu opinión nos ayuda a mejorar y llegar a más personas</p>
+      <canvas id="qr-resena"></canvas>
+      <p class="qr-url" id="url-resena"></p>
+    </div>
+
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimir QR</button>
+
+  <p class="note">
+    💡 <strong>Tip:</strong> Imprime en cartulina A5 o plastifica para las mesas.
+    Actualiza la URL del menú en el código cuando tengas el dominio final.
+  </p>
+
+  <script>
+    const MENU_URL   = 'https://picnic-soho-carta.vercel.app';
+    const RESENA_URL = 'https://g.page/r/CbSmXqiuLRoEEBM/review';
+
+    const opts = {
+      width: 220,
+      margin: 1,
+      color: { dark: '#1a1714', light: '#ffffff' }
+    };
+
+    QRCode.toCanvas(document.getElementById('qr-menu'),   MENU_URL,   opts);
+    QRCode.toCanvas(document.getElementById('qr-resena'), RESENA_URL, { ...opts, color: { dark: '#1a3a7a', light: '#ffffff' } });
+
+    document.getElementById('url-menu').textContent   = MENU_URL;
+    document.getElementById('url-resena').textContent = RESENA_URL;
+  </script>
+</body>
+</html>
