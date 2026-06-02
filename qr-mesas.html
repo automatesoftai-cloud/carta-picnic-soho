@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Mesas — The PicNic</title>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* ── CONFIG: Cambia estas URLs cuando tengas el dominio final ── */
@@ -71,9 +71,11 @@
       line-height: 1.5;
     }
 
-    canvas {
+    #qr-menu img, #qr-resena img,
+    #qr-menu canvas, #qr-resena canvas {
       border-radius: 12px;
       border: 6px solid #f0e9dc;
+      display: block;
     }
 
     .qr-url {
@@ -126,7 +128,7 @@
       <div class="qr-icon">🍽️</div>
       <h2>Ver la Carta</h2>
       <p>Escanea para ver nuestra carta completa con todos los platos y precios</p>
-      <canvas id="qr-menu"></canvas>
+      <div id="qr-menu"></div>
       <p class="qr-url" id="url-menu"></p>
     </div>
 
@@ -134,7 +136,7 @@
       <div class="qr-icon">⭐</div>
       <h2>Deja tu Reseña</h2>
       <p>¿Te ha gustado? Tu opinión nos ayuda a mejorar y llegar a más personas</p>
-      <canvas id="qr-resena"></canvas>
+      <div id="qr-resena"></div>
       <p class="qr-url" id="url-resena"></p>
     </div>
 
@@ -148,17 +150,26 @@
   </p>
 
   <script>
-    const MENU_URL   = 'https://picnic-soho-carta.vercel.app';
+    const MENU_URL   = 'https://carta-picnic-soho.vercel.app';
     const RESENA_URL = 'https://g.page/r/CbSmXqiuLRoEEBM/review';
 
-    const opts = {
+    new QRCode(document.getElementById('qr-menu'), {
+      text: MENU_URL,
       width: 220,
-      margin: 1,
-      color: { dark: '#1a1714', light: '#ffffff' }
-    };
+      height: 220,
+      colorDark: '#1a1714',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
 
-    QRCode.toCanvas(document.getElementById('qr-menu'),   MENU_URL,   opts);
-    QRCode.toCanvas(document.getElementById('qr-resena'), RESENA_URL, { ...opts, color: { dark: '#1a3a7a', light: '#ffffff' } });
+    new QRCode(document.getElementById('qr-resena'), {
+      text: RESENA_URL,
+      width: 220,
+      height: 220,
+      colorDark: '#1a3a7a',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
 
     document.getElementById('url-menu').textContent   = MENU_URL;
     document.getElementById('url-resena').textContent = RESENA_URL;
